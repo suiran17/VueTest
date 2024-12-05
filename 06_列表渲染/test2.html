@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>06_列表渲染_过滤与排序</title>
+    <meta charset="UTF-8">
+    <title>06_列表渲染_过滤与排序</title>
 </head>
 <body>
 <!--
@@ -11,65 +11,74 @@
 -->
 
 <div id="demo">
-  <input type="text" v-model="searchName">
-  <ul>
-    <li v-for="(p, index) in filterPersons" :key="index">
-      {{index}}--{{p.name}}--{{p.age}}
-    </li>
-  </ul>
-  <div>
-    <button @click="setOrderType(2)">年龄升序</button>
-    <button @click="setOrderType(1)">年龄降序</button>
-    <button @click="setOrderType(0)">原本顺序</button>
-  </div>
+    <input type="text" v-model="searchName">
+    <ul>
+        <li v-for="(p, index) in filterPersons" :key="index">
+            {{index}}--{{p.name}}--{{p.age}}
+        </li>
+    </ul>
+    <div>
+        <button @click="setOrderType(0)">原本顺序</button>
+        <button @click="setOrderType(2)">年龄升序</button>
+        <button @click="setOrderType(1)">年龄降序</button>
+    </div>
 </div>
 
 <script type="text/javascript" src="../js/vue.js"></script>
 <script type="text/javascript">
-  new Vue({
-    el: '#demo',
-    data: {
-      searchName: '',
-      orderType: 0, // 0代表不排序, 1代表降序, 2代表升序
-      persons: [
-        {name: 'Tom', age:18},
-        {name: 'Jack', age:17},
-        {name: 'Bob', age:19},
-        {name: 'Mary', age:16}
-      ]
-    },
+    new Vue({
+        el: '#demo',
+        data: {
+            searchName: '',
+            orderType: 0, // 0代表不排序, 1代表降序, 2代表升序
+            persons: [
+                {name: 'Tom', age: 18},
+                {name: 'Jack', age: 17},
+                {name: 'Bob', age: 19},
+                {name: 'Mary', age: 16}
+            ]
+        },
 
-    computed: {
-      filterPersons () {
-//        debugger
-        // 取出相关数据
-        const {searchName, persons, orderType} = this
-        let arr = [...persons]
-        // 过滤数组
-        if(searchName.trim()) {
-          arr = persons.filter(p => p.name.indexOf(searchName)!==-1)
-        }
-        // 排序
-        if(orderType) {
-          arr.sort(function (p1, p2) {
-            if(orderType===1) { // 降序
-              return p2.age-p1.age
-            } else { // 升序
-              return p1.age-p2.age
+        computed: {
+            filterPersons() {
+                // debugger
+
+                // 取出相关数据
+                // 确实可以理解为一种“变量赋值”，但它不仅仅是简单地给变量重新命名。这里使用的是 JavaScript 的解构赋值功能，它从一个对象中提取属性并将其赋值给同名的变量。
+//                 在 Vue.js 的上下文中，this 关键字引用的是当前 Vue 实例。因此，上面的代码从 Vue 实例中提取了 searchName, persons, 和 orderType 这三个属性，并将它们的值分别赋给了同名的局部变量。
+// 这样做有几个好处：
+// 代码简洁性：避免了重复使用 this 关键字，使代码更清晰、更易读。
+// 作用域隔离：局部变量 searchName, persons, 和 orderType 只在当前函数的作用域内可用，这有助于防止命名冲突。
+// 性能优化：在函数内部多次使用局部变量比多次访问 this 属性通常更快，因为局部变量查找的成本较低。
+// 然而，需要注意的是，虽然局部变量的名称与 Vue 实例中的属性名称相同，但它们实际上是独立的变量。修改这些局部变量不会影响 Vue 实例的数据，也不会触发视图的更新。这是因为 Vue 的响应式系统是基于对象属性的，而不是基于局部变量的。如果需要在计算属性或方法中修改数据，应该直接操作 this 上的属性，这样才能保持数据的响应式特性
+                const {searchName, persons, orderType} = this
+                let arr = [...persons]
+
+                // 过滤数组
+                if (searchName.trim()) {
+                    arr = persons.filter(p => p.name.indexOf(searchName) !== -1)
+                }
+
+                // 排序
+                if (orderType) {
+                    arr.sort(function (p1, p2) {
+                        if (orderType === 1) { // 降序
+                            return p2.age - p1.age
+                        }
+                        // 升序
+                        return p1.age - p2.age
+                    })
+                }
+                return arr
             }
+        },
 
-          })
+        methods: {
+            setOrderType(orderType) {
+                this.orderType = orderType
+            }
         }
-        return arr
-      }
-    },
-
-    methods: {
-      setOrderType (orderType) {
-        this.orderType = orderType
-      }
-    }
-  })
+    })
 </script>
 </body>
 </html>

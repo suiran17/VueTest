@@ -19,15 +19,15 @@
   <h2>测试: v-for 遍历数组</h2>
   <ul>
     <li v-for="(p, index) in persons" :key="index">
-      {{index}}--{{p.name}}--{{p.age}}
-      --<button @click="deleteP(index)">删除</button>
-      --<button @click="updateP(index, {name:'Cat', age: 16})">更新</button>
+      {{index}} -- {{p.name}} -- {{p.age}}
+      -- <button @click="deleteP(index)">删除</button>
+      -- <button @click="updateP(index, {name:'Cat', age: 16})">更新</button>
     </li>
   </ul>
+
   <button @click="addP({name: 'xfzhang', age: 18})">添加</button>
 
   <h2>测试: v-for 遍历对象</h2>
-
   <ul>
     <li v-for="(item, key) in persons[1]" :key="key">{{key}}={{item}}</li>
   </ul>
@@ -56,9 +56,32 @@
 
       updateP (index, newP) {
         console.log('updateP', index, newP)
+
+        /*
+
+通义灵码
+在Vue.js中，直接使用this.persons[index] = newP的方式修改数组元素会导致一个关键问题：响应式更新。Vue.js是基于数据驱动的框架，它依赖于数据的响应式系统来自动更新视图。当你直接修改数组元素时，Vue.js的响应式系统可能无法检测到这个变化，因此不会触发视图的更新。
+
+Vue.js为了确保数据的变更能够被正确地追踪和响应，提供了专门的方法来处理数组的变更，如splice()、push()、pop()、shift()、unshift()等。这些方法内部已经实现了对数据变化的捕获和视图的更新。
+
+对于直接修改数组元素的情况，Vue.js提供了一个替代方案：使用Vue.set()或this.$set()方法。这两个方法允许你在对象或数组上设置一个新的响应式属性或元素，从而确保视图的正确更新。
+        */
         // this.persons[index] = newP  // vue根本就不知道
-        this.persons.splice(index, 1, newP)
+//         this.persons.splice(index, 1, newP)
         // this.persons = []
+        
+      /*
+        该函数是JavaScript中的一个方法，用于在数组中插入或替换元素。在HTML中，可以用于动态更新页面上的数据。
+
+具体来说，splice()方法接受三个参数：
+
+index：要插入或替换元素的位置索引。
+1：要移除的元素数量，这里设置为1，表示移除一个元素。
+newP：要插入的新元素。
+该函数会将newP插入到this.persons数组的index位置，替换掉原本位于该位置的元素。如果index超出数组长度，则newP将被添加到数组末尾。*/
+
+        // 使用Vue.set()或this.$set()来更新数组元素
+        this.$set(this.persons, index, newP);
       },
 
       addP (newP) {
